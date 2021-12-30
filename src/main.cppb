@@ -14,7 +14,7 @@ void enterMenu();
 
 void  menuInit();
 
-void otaStart();
+
 
 
 Timers <2> timers;
@@ -39,7 +39,7 @@ void setup(){
   Serial.begin(115200);
   Serial.println("Booting");
   WiFi.mode(WIFI_STA);
-  otaStart();
+
  menuInit();
   
  

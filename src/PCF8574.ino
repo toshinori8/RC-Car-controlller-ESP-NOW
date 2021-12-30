@@ -32,6 +32,7 @@ bool initI2Cbus(){
 
   Remote_1.pinMode(P0,INPUT);
   Remote_1.pinMode(P1,INPUT);
+  Remote_1.pinMode(P2,OUTPUT);
 //   Remote_2.pinMode(P0,OUTPUT);
 //   Remote_2.pinMode(P1,OUTPUT);
   
@@ -50,3 +51,13 @@ bool initI2Cbus(){
 //   Remote_2.digitalWrite(P1,LOW);
 return true;
 }
+
+
+void digitalReadN(){
+   Remote_1.digitalRead(P0);
+   Remote_1.digitalRead(P1);
+   Remote_1.digitalWrite(P0,HIGH);
+//   Remote_1.digitalWrite(P1,LOW);
+
+
+};
