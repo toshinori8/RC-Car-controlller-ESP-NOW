@@ -17,16 +17,9 @@
 
 #define OLED_WIDTH 128
 #define OLED_HEIGHT 32
-
-// mine does not have an onboard reset pin. If yours do, specify the 
-// pin that it is connected to on the Arduino here. To use the 
-// Arduino reset pin, specify -1 as below
-
 #define OLED_RESET -1
-
-// Define the OLED display, width,hight protocol and reset pin
 Adafruit_SSD1306 oled(OLED_WIDTH,OLED_HEIGHT, &Wire, OLED_RESET);
-
+bool void initOled();
 
 
 // Define the PCF8574 devices ( you can have up to 8 on a bus )
@@ -41,27 +34,10 @@ Adafruit_SSD1306 oled(OLED_WIDTH,OLED_HEIGHT, &Wire, OLED_RESET);
 
 void setup() {
     Wire.begin(14,12);
-
+    Serial.begin(115200);
     
-  // serial debugging if needed
-  Serial.begin(115200);
-  // Start OLED Display Init
-
-  if (!oled.begin(SSD1306_SWITCHCAPVCC,0x3C,false,false)) { // Init the OLED 
-    Serial.println(F("OLED INIT FAILED"));
-   // for(;;); // Dont proceed ... loop forever//
-  }else{
-
-    delay(2000); 
-    oled.clearDisplay();
-    oled.setTextSize(0);
-    oled.setTextColor(SSD1306_WHITE);
-    oled.setCursor(0,0);
-    oled.println("TEST SCREEN");
-    oled.display();
-
-    
-  }
+ 
+  
  
    
   
