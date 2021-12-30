@@ -14,7 +14,6 @@
 // I2C device found at address 0x23  !  PCF8574
 // I2C device found at address 0x3C  !  OLED  
 
-// we need to define the size of the OLED screen
 
 #define OLED_WIDTH 128
 #define OLED_HEIGHT 32
@@ -53,26 +52,20 @@ void setup() {
    // for(;;); // Dont proceed ... loop forever//
   }else{
 
-Serial.println(F("OLED INIT XXXXXXXXX"));
+    delay(2000); 
+    oled.clearDisplay();
+    oled.setTextSize(0);
+    oled.setTextColor(SSD1306_WHITE);
+    oled.setCursor(0,0);
+    oled.println("TEST SCREEN");
+    oled.display();
 
+    
   }
-//   oled.display();
-  delay(2000); // This delay is required to give display time to 
-  // initialise properly
-   oled.clearDisplay();
-  oled.setTextSize(0);
-  oled.setTextColor(SSD1306_WHITE);
-   oled.setCursor(0,0);
-  oled.println("TEST SCREEN");
-  oled.display();
-  delay(2000);
-//   oled.clearDisplay();
-//   oled.setCursor(1,0);
+ 
    
-   // oled.println("OLED SCREEN ON");
- // oled.display();
+  
 
-  // Start the LCD
 
   
   
