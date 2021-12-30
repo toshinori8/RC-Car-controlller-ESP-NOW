@@ -3,7 +3,8 @@
 #include <streamFlow.h>
 #include <Timers.h>
 #define OTA
-#define WIFI
+#define WIFION
+#define ESPNOW
 
 // I2C device found at address 0x23  !  PCF8574
 // I2C device found at address 0x3C  !  OLED
@@ -11,7 +12,8 @@
 Timers<2> timers;
 bool initOled();
 bool initI2Cbus();
-
+void otaStart();
+void esp_now();
 void digitalReadN();
 
 
@@ -25,8 +27,11 @@ void setup()
   timers.attach(0, 150, digitalReadN);
   initOled();
   initI2Cbus();
-  // WiFi.mode(WIFI_STA);
-  // otaWifiStart();
+
+
+  #if (defined(WIFI_))
+  otaStart();
+  #endif
 }
 
 void loop()

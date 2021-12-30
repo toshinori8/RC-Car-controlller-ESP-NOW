@@ -15,15 +15,15 @@
 #define STAPSK "pmgana921"
 #endif
 
-const char *ssid = STASSID;
-const char *password = STAPSK;
+const char *ssid_ = STASSID;
+const char *password_ = STAPSK;
 
 void otaStart()
 {
 
 #if (defined(WIFI))
     WiFi.mode(WIFI_STA);
-    WiFi.begin(ssid, password);
+    WiFi.begin(ssid_, password_);
     while (WiFi.waitForConnectResult() != WL_CONNECTED)
     {
         Serial.println("Connection Failed! Rebooting...");
@@ -79,4 +79,10 @@ void otaStart()
     ArduinoOTA.begin();
 
 #endif
+
+#if(defined(NOW))
+
+
+#endif
+
 }
