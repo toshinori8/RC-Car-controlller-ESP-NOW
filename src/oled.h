@@ -3,6 +3,8 @@
 #include <Adafruit_SSD1306.h> // for OLED display
 #include <Adafruit_I2CDevice.h>
 
+
+
 #define OLED_WIDTH 128
 #define OLED_HEIGHT 32
 #define OLED_RESET -1
@@ -19,7 +21,7 @@ bool state;
     state = false;
    // for(;;); // Dont proceed ... loop forever//
   }else{
-
+    oled.setRotation(2);
     oled.clearDisplay();
     oled.setTextSize(0);
     oled.setTextColor(SSD1306_WHITE);
@@ -32,11 +34,3 @@ bool state;
 return state;
 }
 
-void oprint(String var){
-
- oled.clearDisplay();
- oled.setCursor(0,0); 
- oled.println(var);
- oled.display();
-
-}

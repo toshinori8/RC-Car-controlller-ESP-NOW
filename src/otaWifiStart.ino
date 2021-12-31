@@ -1,27 +1,42 @@
 #include <Arduino.h>
+#define OTA_
+#define WIFI_
+#define ESPNOW_
 
-#if (defined(WIFI))
+
+
+
+#if (defined(WIFI_) || defined(ESPNOW_))
 #include <ESP8266WiFi.h>
+
+#define STASSID "oooooio"
+#define STAPSK  "pmgana921"
+
+const char *ssid_ = STASSID;
+const char *password_ = STAPSK;
+
 #endif
 
-#if (defined(OTA))
+
+
+#if (defined(OTA_))
 #include <ESP8266mDNS.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 #endif
 
-#ifndef STASSID
-#define STASSID "oooooio"
-#define STAPSK "pmgana921"
-#endif
 
-const char *ssid_ = STASSID;
-const char *password_ = STAPSK;
 
-void otaStart()
-{
 
-#if (defined(WIFI))
+
+
+
+
+
+#if (defined(WIFI_))
+
+void wifiStart(){
+
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid_, password_);
     while (WiFi.waitForConnectResult() != WL_CONNECTED)
@@ -33,9 +48,13 @@ void otaStart()
     Serial.println("Ready");
     Serial.print("IP address: ");
     Serial.println(WiFi.localIP());
+
+}
 #endif
 
-#if (defined(OTA))
+#if (defined(OTA_))
+void otaStart()
+{
 
     ArduinoOTA.setHostname("RC Car Controller");
 
@@ -77,12 +96,15 @@ void otaStart()
      Serial.println("End Failed");
    } });
     ArduinoOTA.begin();
-
-#endif
-
-#if(defined(NOW))
-
-
-#endif
-
 }
+#endif
+
+
+
+#if(defined(ESPNOW_))
+void esp_nowStart(){
+
+
+};
+
+#endif

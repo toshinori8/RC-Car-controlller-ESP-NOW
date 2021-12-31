@@ -1,5 +1,8 @@
 #include <Arduino.h>
 #include <PCF8574.h> // PCF8574
+#include <functions.h>
+
+
 
 // Define the PCF8574 devices ( you can have up to 8 on a bus )
 // but in this case, my LCD uses address 0x27, so I will have a 
@@ -54,9 +57,25 @@ return true;
 
 
 void digitalReadN(){
-   Remote_1.digitalRead(P0);
-   Remote_1.digitalRead(P1);
-   Remote_1.digitalWrite(P0,HIGH);
+  int p0= Remote_1.digitalRead(P0);
+  int p1=  Remote_1.digitalRead(P1);
+   ///Remote_1.digitalWrite(P0,!p0);
+    
+  Serial.println("digitalRead(P0)");
+  Serial.print(Remote_1.digitalRead(P0));
+
+  Serial.println("digitalRead(P1)");
+  Serial.print(Remote_1.digitalRead(P1));
+  if(p0==HIGH){
+
+    oprint("MENU");
+
+  }else{
+
+     oprint("STEER");
+
+  }
+
 //   Remote_1.digitalWrite(P1,LOW);
 
 
