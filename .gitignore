@@ -1,6 +1,7 @@
 # Prerequisites
 *.d
-
+.pio/build/
+.vscode
 # Compiled Object files
 *.slo
 *.lo
@@ -31,3 +32,4 @@
 *.out
 *.app
 .pio/libdeps/.DS_Store
+lib/.DS_Store

@@ -1,0 +1,71 @@
+#include <Arduino.h>
+#include <ESP8266WiFi.h>
+#include <Adafruit_SSD1306.h>
+#include <ArduinoOTA.h>
+#include <Timers.h>
+
+
+
+#include <OneButton.h>
+int menuButton = D7;
+OneButton pushBt(menuButton, true);
+
+void enterMenu();
+
+void  menuInit();
+
+
+
+
+Timers <2> timers;
+
+
+void acceptBTN(){
+
+    Serial.println("Accept button clicked");
+};
+
+
+
+
+void setup(){
+
+// pinMode(menuButton,INPUT);
+// digitalWrite(menuButton, LOW);
+  pushBt.attachLongPressStart(acceptBTN);
+  pushBt.attachLongPressStop(acceptBTN);
+  //pushBt.attachDoubleClick(enterMenu);
+  
+  Serial.begin(115200);
+  Serial.println("Booting");
+  WiFi.mode(WIFI_STA);
+
+ menuInit();
+  
+ 
+  
+
+  
+
+
+}
+  
+
+
+
+
+
+void loop() {
+
+
+  //Serial.println(digitalRead(menuButton));
+
+  pushBt.tick();
+ 
+  
+  Serial.println(digitalRead(menuButton));
+
+  ArduinoOTA.handle();
+  timers.process();  
+  
+}

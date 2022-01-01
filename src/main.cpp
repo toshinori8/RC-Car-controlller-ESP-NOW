@@ -1,24 +1,79 @@
 #include <streamFlow.h>
-#include <SPI.h>  // needed for OLED display.
-#include <Wire.h>    // Required for I2C communication
- // Required for PCF8574
-
+#include <SPI.h>        // needed for OLED display.
+// #include <Wire.h>    // Required for I2C communication
 #include <header.h>
-
 #include <Timers.h>
-#define OTA_
-#define WIFI_
-#define ESPNOW_
+#include "PCF8574.h"
+//#define OTA_
+//#define WIFI_
+//#define ESPNOW_
+uint8_t ButtonVal;
+
+PCF8574 pcf8574(0x25,14,12);
 
 
 
+bool initI2Cbus(){
+
+    pcf8574.pinMode(0, INPUT);
+	  pcf8574.pinMode(1, OUTPUT);
+    pcf8574.digitalWrite(0,LOW);
+    pcf8574.digitalWrite(1,HIGH);
+	  pcf8574.digitalWrite(2,LOW);
+
+  delay(1000);
+  Serial.print("Init pcf8574...");
+	if (pcf8574.begin()){
+		Serial.println("OK");
+        return true;
+	}else{
+		Serial.println("NOT OK");
+        return false;
+	}
+
+  delay(1000);
+
+
+}
+
+
+struct __attribute__((packed)) dataStruct {
+  int pot;
+  int drive;
+  int ster;
+
+  String dirDrive;
+  String dirSter;
+
+  
+} sensorData;
+
+
+void updateData(int ster, int drive,String dirDrive, String dirSter,int POT){
+    sensorData.pot=POT;
+    sensorData.ster=ster;
+    sensorData.drive=drive;
+    sensorData.dirDrive=dirDrive;
+    sensorData.dirSter=dirSter;
+    Serial.println(sensorData.pot);
 
 
 
-// I2C device found at address 0x23  !  PCF8574
+ uint8_t bs[sizeof(sensorData)];
+
+  memcpy(bs, &sensorData, sizeof(sensorData));
+
+    #if defined(ESPNOW_)
+    esp_now_send(remoteMac, bs, sizeof(sensorData)); // NULL means send to all peers
+    #endif
+  
+  }
+
+
+// I2C device found at address 0x25  !  PCF8574
 // I2C device found at address 0x3C  !  OLED
 
-Timers<2> timers;
+Timers<3> timers;
 
 
 
@@ -27,19 +82,29 @@ Timers<2> timers;
 
 void setup()
 {
-  Wire.begin(14, 12);
+  Serial.begin(115200);  
+ // Wire.begin(14, 12);
  
-       
-  Serial.begin(115200);
-  timers.attach(0, 350, digitalReadN);
-  initOled();
+
+  delay(1000);
   initI2Cbus();
 
-  #if (defined(WIFI_))
-  wifiStart();
-  #endif
+  
+  timers.attach(0, 350, handleMenu);
+  timers.attach(1, 100, handleButton);
+  timers.attach(2,  0, readTurn);
+
+
+
+  initOled();
+
+  delay(1000);
+
   #if (defined(ESPNOW_))
   esp_nowStart();
+  #endif
+  #if (defined(WIFI_))
+  wifiStart();
   #endif
   #if (defined(OTA_))
   otaStart();
@@ -49,42 +114,16 @@ void setup()
 
 void loop()
 {
+    timers.process();
 
-	digitalReadN();
+#if (defined(OTA_))
+ArduinoOTA.handle()
+#endif
 
-  // ArduinoOTA.handle();
-
-  // Write to the IO extenders
-
-  //   Remote_1.digitalWrite(P0,HIGH);
-  //   Remote_1.digitalWrite(P1,LOW);
-  //   Remote_2.digitalWrite(P0,HIGH);
-  //   Remote_2.digitalWrite(P1,LOW);
-
-  // Display their status on the LCD
-  //   oled.setCursor(0,0);
-  //   oled.print(" R1 P0=1 P1=0");
-  //   oled.setCursor(0,1);
-  //   oled.print(" R2 P0=1 P1=0");
-  //   delay(500);
-
-  // Change status
-  //   Remote_1.digitalWrite(P1,HIGH);
-  //   Remote_1.digitalWrite(P0,LOW);
-  //   Remote_2.digitalWrite(P1,HIGH);
-  //   Remote_2.digitalWrite(P0,LOW);
-
-  // Update LCD
-  //   oled.setCursor(0,0);
-  //   oled.print(" R1 P0=0 P1=1");
-  //   oled.setCursor(0,1);
-  //   oled.print(" R2 P0=0 P1=1");
-  //   delay(500);
-  // Do some graphics on the OLED display
-  // Function borrowed from Adafruit
-
-  //   oled.clearDisplay();
-  //   delay(500);
-  // repeat indefinitely 
-  timers.process();
 }
+void handleButton(){
+   ButtonVal = pcf8574.digitalRead(0);
+}
+
+
+#include <oled.h>
