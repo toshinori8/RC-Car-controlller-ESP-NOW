@@ -1,7 +1,7 @@
 # Prerequisites
 *.d
-.pio/build/
-.vscode
+.pio/
+.vscode/
 # Compiled Object files
 *.slo
 *.lo
