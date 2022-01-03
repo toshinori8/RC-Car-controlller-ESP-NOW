@@ -3,12 +3,27 @@
 #include <main.h>
 #include <Timers.h>
 #include "PCF8574.h"
+#include <Adafruit_GFX.h>     // for OLED display
+#include <Adafruit_SSD1306.h> // for OLED display
+#include <Adafruit_I2CDevice.h>
+
 extern "C" {
   #include <espnow.h>
 } 
+#include "main.h"
+
 #include "menu.h"
+#include "oled.h"
+#include "readPots.h"
+
+uint8_t remoteMac[] = {0xCC, 0x50, 0xE3, 0x56, 0xB7, 0x36};
+#define WIFI_CHANNEL 12
+uint8_t ButtonVal;
+
 
 PCF8574 pcf8574(0x25, 14, 12);
+
+
 
 bool initI2Cbus()
 {
@@ -76,19 +91,18 @@ void updateData(int ster, int drive, String dirDrive, String dirSter, int POT)
   sensorData.dirDrive = dirDrive;
   sensorData.dirSter = dirSter;
 
- 
-
   //Serial.println(sensorData.pot);
- uint8_t bs[sizeof(sensorData)];
+  uint8_t bs[sizeof(sensorData)];
   memcpy(bs, &sensorData, sizeof(sensorData));
-  esp_now_send(remoteMac, bs, sizeof(sensorData)); // NULL means send to all peers
-
+  esp_now_send(remoteMac, bs, sizeof(sensorData)); // NULL means send to all peer
 }
 
 // I2C device found at address 0x25  !  PCF8574
 // I2C device found at address 0x3C  !  OLED
 
 Timers<3> timers;
+
+
 
 // U8G2_SSD1306_128X32_UNIVISION_F_SW_I2C u8g2(U8G2_R0, /* clock=*/ 12, /* data=*/ 14, /* reset=*/ U8X8_PIN_NONE);   // Adafruit Feather ESP8266/32u4 Boards + FeatherWing OLED
 // U8GLIB_SSD1306_128X32 u8g2(U8G_I2C_OPT_NONE);	// I2C / TWI
@@ -118,15 +132,13 @@ void setup()
         otaStart();
       #endif
 
-
-
      // Init ESP-NOW
 if (esp_now_init() != 0) {
     Serial.println("*** ESP_Now init failed");
    
-  }
+}
 
- esp_now_set_self_role(ESP_NOW_ROLE_CONTROLLER);
+  esp_now_set_self_role(ESP_NOW_ROLE_CONTROLLER);
   esp_now_add_peer(remoteMac, ESP_NOW_ROLE_SLAVE, WIFI_CHANNEL, NULL, 0);
 
   esp_now_register_send_cb([](uint8_t* mac, uint8_t sendStatus) {

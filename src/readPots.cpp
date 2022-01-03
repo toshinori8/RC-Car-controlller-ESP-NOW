@@ -1,7 +1,24 @@
 
 #include "readPots.h"
-#include "oled.h"
-#include "main.h"
+
+
+String acc = "forward";
+int brake = 0;
+int pot = 0;
+int Pin_A = 5; // analog INPUT POWER SOURCE #1
+int Pin_B = 4; // analog INPUT POWER SOURCE #2
+bool sw = false;
+int turnVal1;
+int turnVal2;
+int mem1;
+int mem2;
+int maped1;
+int maped2;
+String dir;
+int value1;
+int value2;
+
+
 
 
 void readTurn()
@@ -45,7 +62,6 @@ void readTurn()
         }
         else
         {
-
             drawSter(maped1, maped2, dir, acc, value1);
             updateData(maped1, maped2, acc, dir, turnVal1);
         }
@@ -56,7 +72,6 @@ void readTurn()
     }
     else
     { /// acceleration reading
-
         digitalWrite(Pin_B, LOW);
         digitalWrite(Pin_A, HIGH);
 
@@ -95,3 +110,4 @@ void readTurn()
         updateData(maped1, maped2, acc, dir, turnVal1);
     }
 };
+

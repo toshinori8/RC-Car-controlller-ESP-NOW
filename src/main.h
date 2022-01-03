@@ -1,11 +1,12 @@
- #pragma once
+#ifndef MAIN_H
+#define MAIN_H
+ //#pragma once
 
 //#define OTA_
 //#define WIFI_
 #define ESPNOW_
 
-  uint8_t remoteMac[] = {0xCC, 0x50, 0xE3, 0x56, 0xB7, 0x36};
-  #define WIFI_CHANNEL 12
+
 
 
 
@@ -15,25 +16,24 @@ void wifiStart();
 void otaStart();
 void esp_nowStart();
 void digitalReadN();
-void oprint(String var);
 bool initOled();
 void handleMenu();
 
 void handleButton();
 // READING POTS / DISPLAY & SEND
-void updateData(int ster, int drive, String dirDrive, String dirSter, int POT); // ESP-NOW PREPARE DATA & SEND
+extern void updateData(int ster, int drive, String dirDrive, String dirSter, int POT); // ESP-NOW PREPARE DATA & SEND
 
-void readTurn();
-void updateOptions();
-
-
-bool OparkingLights;
-bool OturnSignals_auto;
-bool Oheadlights;
-bool OautoOffLights;
-bool OrearDoor;
+extern void readTurn();
+extern void updateOptions();
 
 
-uint8_t ButtonVal;
 
+extern bool OparkingLights;
+extern bool OturnSignals_auto;
+extern bool Oheadlights;
+extern bool OautoOffLights;
+extern bool OrearDoor;
+
+
+#endif // MAIN
 

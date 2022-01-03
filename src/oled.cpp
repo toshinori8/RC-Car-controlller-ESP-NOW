@@ -1,5 +1,13 @@
-#include <oled.h>
+#include <Adafruit_GFX.h>     // for OLED display
+#include <Adafruit_SSD1306.h> // for OLED display
+#include <Adafruit_I2CDevice.h>
+#include "oled.h"
 
+Adafruit_SSD1306 oled(OLED_WIDTH, OLED_HEIGHT, &Wire, OLED_RESET);
+
+#define MENU_SIZE 2
+int pos = -1;
+Opcje opcje;
 
 
 bool initOled()
@@ -54,38 +62,104 @@ void drawSter(int val1, int val2, String direct, String acc, int brake)
   oled.display();
 }
 
+// DEFINE MENU ITEMS
+
+
+
+
+//
 
 
 
 
 
-#define MENU_SIZE 2
-int pos = -1;
+
+ void displayMenu(String comm){
+
+
+opcje.item[0].type = "bool";
+opcje.item[0].name = "opcja dwa";
+opcje.item[0].value = true;
+  
+opcje.item[1].type = "bool";
+opcje.item[1].name = "Auto OFF (1min)";
+opcje.item[1].value = true;
+  
+opcje.item[2].type = "bool";
+opcje.item[2].name = "migacze";
+opcje.item[2].value = true;
+
+
+
+    if(comm =="start") {pos =0;};
+
+    if(comm=="enter" & opcje.item[pos].type=="bool"){
+       
+      opcje.item[pos].value=!opcje.item[pos].value;
+      oled.setCursor(0,2);
+      
+      String op = (opcje.item[pos].value ==true)  ? "+" : "-";
+      oled.print(op); 
+      
+
+    }else if(comm=="enter" & opcje.item[pos].type=="func"){
 
 
 
 
-class Opcje {
-  public : int size;
-  public: struct item
-    {
-      String type;
-      String name;
-      bool value;
-      int sec;
-      void (*func)(void);
-    } item[3];
+    }else if(comm=="enter" & opcje.item[pos].type=="func"){
 
-};
 
-Opcje opcje;
 
-void changeParam(bool cur) {
+    }else{
+    
+    
+    oled.clearDisplay();
+    oled.setCursor(0,0);
+    oled.print(comm);
 
-  Serial.println("zmiana czasu");
-}
+    oled.setCursor(12,0);
+      oled.print(pos);
 
-int curMenu=0;
+    oled.setCursor(0,2);
+    
+    
+    
+    // oled bool checker
+      String opt = (opcje.item[pos].value ==true)  ? "+" : "-";
+      oled.print(opt);
+
+
+    //
+
+
+
+    oled.setCursor(3,0);
+    oled.print(opcje.item[pos].type); 
+
+
+
+    oled.setCursor(3,3);
+    oled.print(opcje.item[pos].name);  
+
+    
+    }
+    
+    
+
+ } 
+ 
+
+
+
+
+
+
+
+
+
+
+
 
 
 

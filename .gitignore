@@ -1,10 +1,17 @@
 # Prerequisites
 *.d
-.pio/
-.vscode/
+
+
+
+
+
+### PlatformIO ###
+.pioenvs
+.piolibdeps
+.clang_complete
+.gcc-flags.json
 .pio
 .vscode
-
 
 # Compiled Object files
 *.slo
@@ -37,3 +44,11 @@
 *.app
 .pio/libdeps/.DS_Store
 lib/.DS_Store
+.pio/build/nodemcuv2/.sconsign39.dblite
+.pio/build/project.checksum
+.vscode/c_cpp_properties.json
+.vscode/launch.json
+.vscode/extensions.json
+.vscode/c_cpp_properties.json
+.pio/build/project.checksum
+.pio/build/nodemcuv2/.sconsign39.dblite
