@@ -2,6 +2,10 @@
 *.d
 .pio/
 .vscode/
+.pio
+.vscode
+
+
 # Compiled Object files
 *.slo
 *.lo
