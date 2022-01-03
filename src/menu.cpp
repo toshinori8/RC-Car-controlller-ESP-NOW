@@ -10,6 +10,8 @@ void changeParam(bool cur) {
 
  void displayMenu(String comm){
     
+    if(comm =="start") {pos =0;};
+
     if(comm=="enter" & opcje.item[pos].type=="bool"){
        
       opcje.item[pos].value=!opcje.item[pos].value;

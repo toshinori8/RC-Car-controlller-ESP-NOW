@@ -9,7 +9,7 @@ extern "C" {
 #include "menu.h"
 
 PCF8574 pcf8574(0x25, 14, 12);
-void displayMenu();
+
 bool initI2Cbus()
 {
 
@@ -158,7 +158,7 @@ void handleMenu()
 {
   if (ButtonVal == HIGH)
   {
-    displayMenu();
+    displayMenu("start");
     timers.updateInterval(2,0);
   }
   else

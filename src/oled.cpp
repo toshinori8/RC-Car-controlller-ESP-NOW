@@ -89,43 +89,7 @@ int curMenu=0;
 
 
 
- void displayMenu(String comm){
-    
-    if(comm=="enter" & opcje.item[pos].type=="bool"){
-       
-      opcje.item[pos].value=!opcje.item[pos].value;
-      oled.setCursor(0,2);
-      
-      String op = (opcje.item[pos].value ==true)  ? "+" : "-";
-      oled.print(op);  
 
-    }else if(comm=="enter" & opcje.item[pos].type=="func"){
-
-    }else if(comm=="enter" & opcje.item[pos].type=="func"){
-
-    }else{
-    
-    oled.clearDisplay();
-    oled.setCursor(0,0);
-    oled.print(comm);
-
-    oled.setCursor(12,0);
-    oled.print(pos);
-    oled.setCursor(0,2);
-    
-    // display bool checker
-      String opt = (opcje.item[pos].value ==true)  ? "+" : "-";
-      oled.print(opt);
-    //
-
-    oled.setCursor(3,0);
-    oled.print(opcje.item[pos].type); 
-
-    oled.setCursor(3,3);
-    oled.print(opcje.item[pos].name);  
-    }
-    
- } 
  
 
 
