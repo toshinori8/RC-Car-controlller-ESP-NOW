@@ -1,15 +1,15 @@
 #include <streamFlow.h>
 #include <SPI.h>
-#include <header.h>
+#include <main.h>
 #include <Timers.h>
 #include "PCF8574.h"
 extern "C" {
   #include <espnow.h>
 } 
+#include "menu.h"
 
-uint8_t ButtonVal;
 PCF8574 pcf8574(0x25, 14, 12);
-
+void displayMenu();
 bool initI2Cbus()
 {
 
@@ -147,10 +147,28 @@ void loop()
 }
 
 
-
 void handleButton()
       {
         ButtonVal = pcf8574.digitalRead(0);
       }
 
-#include <oled.h>
+
+
+void handleMenu()
+{
+  if (ButtonVal == HIGH)
+  {
+    displayMenu();
+    timers.updateInterval(2,0);
+  }
+  else
+  {
+    timers.updateInterval(2,450);
+    //oprint("Application");
+
+
+
+  }
+  delay(50);
+}
+
