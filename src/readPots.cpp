@@ -23,6 +23,7 @@ int value2;
 
 void readTurn()
 {
+      
     sw = !sw;
     if (sw == true)
     { /// TURN POT reading

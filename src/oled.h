@@ -2,7 +2,7 @@
 #define OLED_H
 #include <Arduino.h>
 
-
+#include "main.h"
 
 
 #define OLED_WIDTH 128
@@ -29,12 +29,13 @@ class Opcje {
       bool value;
       int sec;
       void (*func)(void);
-    } item[3];
+    } item[10];
 
 };
 
 void changeParam(bool cur);
 void displayMenu(String comm);
+
 
 
 

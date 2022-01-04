@@ -10,7 +10,6 @@
 
 
 
-
 bool initI2Cbus();
 void wifiStart();
 void otaStart();
@@ -34,6 +33,7 @@ extern bool Oheadlights;
 extern bool OautoOffLights;
 extern bool OrearDoor;
 
-
+extern int pos;
+extern bool menustate;
 #endif // MAIN
 

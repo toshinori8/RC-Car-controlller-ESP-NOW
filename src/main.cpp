@@ -7,6 +7,11 @@
 #include <Adafruit_SSD1306.h> // for OLED display
 #include <Adafruit_I2CDevice.h>
 
+
+
+
+
+byte incomingByte;
 extern "C" {
   #include <espnow.h>
 } 
@@ -19,9 +24,10 @@ extern "C" {
 uint8_t remoteMac[] = {0xCC, 0x50, 0xE3, 0x56, 0xB7, 0x36};
 #define WIFI_CHANNEL 12
 uint8_t ButtonVal;
+int pos = -1;
+bool menustate=0;
 
-
-PCF8574 pcf8574(0x25, 14, 12);
+PCF8574 pcf8574(0x25, 14, 12);;
 
 
 
@@ -91,7 +97,6 @@ void updateData(int ster, int drive, String dirDrive, String dirSter, int POT)
   sensorData.dirDrive = dirDrive;
   sensorData.dirSter = dirSter;
 
-  //Serial.println(sensorData.pot);
   uint8_t bs[sizeof(sensorData)];
   memcpy(bs, &sensorData, sizeof(sensorData));
   esp_now_send(remoteMac, bs, sizeof(sensorData)); // NULL means send to all peer
@@ -111,11 +116,13 @@ void setup()
 {
   Serial.begin(115200);
 
+
+
   delay(1000);
   initI2Cbus();
 
   timers.attach(0, 350, handleMenu);
-  timers.attach(1, 100, handleButton);
+  timers.attach(1, 300, handleButton);
   timers.attach(2, 0, readTurn);
 
   initOled();
@@ -134,7 +141,7 @@ void setup()
 
      // Init ESP-NOW
 if (esp_now_init() != 0) {
-    Serial.println("*** ESP_Now init failed");
+    Serial.println("*** ESP_NOW init failed");
    
 }
 
@@ -145,7 +152,7 @@ if (esp_now_init() != 0) {
    // Serial.printf("send_cb, send done, status = %i\n", sendStatus);
    
   });
- 
+
 
 }
 
@@ -156,26 +163,60 @@ void loop()
         #if (defined(OTA_))
           ArduinoOTA.handle()
         #endif
+
+
+
+
+while(Serial.available()) {
+String a= Serial.readString();
+if(a==">"){displayMenu(a);}
+if(a=="<"){displayMenu(a);}
+
+
+if (a.substring(0) == "x") 
+  {
+    displayMenu(a);
+    Serial.println("identified");
+  } 
 }
 
 
+
+
+}
+
 void handleButton()
       {
-        ButtonVal = pcf8574.digitalRead(0);
+        
       }
 
 
 
 void handleMenu()
 {
-  if (ButtonVal == HIGH)
+  ButtonVal = pcf8574.digitalRead(0);
+
+// Serial.println(String(menustate)+" - menustate");
+// Serial.println(String(pos)+" - [pos]");
+// Serial.println(String(ButtonVal)+" - Buttonval");
+
+
+  if (ButtonVal == 1)
   {
-    displayMenu("start");
+    
     timers.updateInterval(2,0);
+    
+   if(menustate==0){
+        displayMenu("start");
+ 
+   }  
+    
+ 
   }
-  else
+  if (ButtonVal == 0 )
   {
-    timers.updateInterval(2,450);
+    menustate=0;
+    timers.updateInterval(2,100);
     //oprint("Application");
 
 
