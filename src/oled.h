@@ -24,8 +24,10 @@ class Opcje {
   public : int size;
   public: struct item
     {
+      int ind;
       String type;
       String name;
+      String desc;
       bool value;
       int sec;
       void (*func)(void);

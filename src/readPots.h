@@ -5,7 +5,7 @@
 #include "main.h"
 
 void readTurn();
-
+void readTurn_encoder();
 
 
 #endif // READPOTS_H

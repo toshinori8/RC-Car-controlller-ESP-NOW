@@ -69,39 +69,52 @@ bool initOled()
     oled.setTextSize(0);
     oled.setTextColor(SSD1306_WHITE);
     oled.setCursor(0, 0);
-    oled.println("TEST SCREEN");
+    
     oled.display();
     state = true;
   }
 
 
-
+opcje.item[0].ind = 0;
 opcje.item[0].type = "bool";
-opcje.item[0].name = "Dlugie";
+opcje.item[0].name = "Sw. drogowe";
+opcje.item[0].desc = "Długie";
 opcje.item[0].value = false;
 
+opcje.item[1].ind = 1;
 opcje.item[1].type = "bool";
-opcje.item[1].name = "Krutkie";
+opcje.item[1].name = "Sw mijania";
+opcje.item[1].desc = "Krotkie";
 opcje.item[1].value = false;
   
+opcje.item[2].ind = 2;  
 opcje.item[2].type = "bool";
 opcje.item[2].name = "Halogeny";
+opcje.item[2].desc = "Szperacze na masce";
 opcje.item[2].value = false;
-  
+
+opcje.item[3].ind = 3;  
 opcje.item[3].type = "bool";
 opcje.item[3].name = "Migacze auto";
+opcje.item[3].desc = "Kierunkowskazy przy skręcaniu";
 opcje.item[3].value = true;
 
+opcje.item[4].ind = 4;
 opcje.item[4].type = "bool";
 opcje.item[4].name = "Alarm";
+opcje.item[4].desc = "Włącz alarm";
 opcje.item[4].value = false;
 
+opcje.item[5].ind = 5;
 opcje.item[5].type = "bool";
 opcje.item[5].name = "Awaryjne";
+opcje.item[5].desc = "Światła awaryjne";
 opcje.item[5].value = false;
 
+opcje.item[6].ind = 6;
 opcje.item[6].type = "bool";
 opcje.item[6].name = "Auto OFF";
+opcje.item[6].desc = "Wyłączenie świateł po 30s";
 opcje.item[6].value = true;
 
 
@@ -125,12 +138,26 @@ void drawSter(int val1, int val2, String direct, String acc, int brake)
 //u8g2.clearBuffer();
   u8g2.setDisplayRotation(U8G2_R2);
   
-  oled.drawFastVLine(20,20,2,SSD1306_WHITE);
 
   
   // PRINT KNOBS ON OLED  
-  u8g2.setFont(u8g2_font_amstrad_cpc_extended_8f); 
+    u8g2.setFont(u8g2_font_amstrad_cpc_extended_8f); 
   
+
+// Serial.println(O_long_lights);
+// Serial.println(O_short_lights);
+// Serial.println(O_turn_lights);
+// Serial.println(O_error_lights);
+// Serial.println(battery_low);
+// Serial.println(O_long_lights);
+// Serial.println(O_long_lights);
+  
+  // CLEAR ICONS ARREA
+    u8g2.setDrawColor(BLACK);
+    u8g2.drawBox(45,0,90,32);
+
+    u8g2.setDrawColor(WHITE);
+    u8g2.drawBox(45,0,1,32);
 
         // Display icons 
   if(O_long_lights==1){
@@ -157,33 +184,43 @@ void drawSter(int val1, int val2, String direct, String acc, int brake)
 
   }
 
+  //oled.drawLine(0,20,20,40,SSD1306_WHITE);
 
+  //  u8g2.setFont(u8g2_font_helvR10_tf);
 
-  // Print KIERUNKI
+  // Print Forward / Backward
+
   u8g2.setCursor(0, 20);
+  u8g2.print(acc); // left / right ||
+  
+  // Print Left / Right
+  u8g2.setCursor(20, 20);
   u8g2.print(direct);
-  // Print BRAKE
-  u8g2.setCursor(10, 20);
-  u8g2.print(brake);
 
-    // Print UP/DOWN
-  u8g2.setCursor(0, 30);
-  u8g2.print(acc);
 
-  u8g2.setFont(u8g2_font_helvR10_tn);
-    // Print value of kierunek 
-  u8g2.setCursor(0, 11);
-  u8g2.print(val1);
+//  Serial.println("val1   "+String(val1));
+
+//  Serial.println("val2   "+String(val2));
+
+//  Serial.println("acc    "+acc);
+
+//  Serial.println("direct "+direct);
+
+//  Serial.println("brake  "+brake);
+
+
+  //u8g2.setCursor(0, 11);
+  //u8g2.print(direct);
 
     // Print value of acceleration 
-  u8g2.setCursor(30, 11);
-  u8g2.print(val2);
+  //u8g2.setCursor(30, 11);
+  //u8g2.print(acc);
   
 
   //u8g2.setFont(u8g2_font_unifont_t_72_73);  // use chinese2 for all the glyphs of "你好世界"
   //u8g2.setFontDirection(0);
-  u8g2.setCursor(0, 0);
-  u8g2.print("łucja");		// Chinese "Hello World" 
+  // u8g2.setCursor(0, 0);
+  // u8g2.print("łucja");		// Chinese "Hello World" 
   u8g2.sendBuffer();
 
   //oled.display();
@@ -245,37 +282,39 @@ oled.setFont(&FreeSans9pt7b);
       oled.print(opcje.item[pos].name);  
 
 
-      opcje.item[pos].value=!opcje.item[pos].value;
-      
+      // TRIGGER CHANGE BUTTON ACCTION
       if(comm=="x" & opcje.item[pos].type=="bool"){
 
-          if(opcje.item[pos].name=="Dlugie"){
+           // CHANGE OPTION
+              opcje.item[pos].value=!opcje.item[pos].value;
+
+            // SET CHANGES
+          if(opcje.item[pos].ind==0){
             O_long_lights=opcje.item[pos].value;
           }
-          if(opcje.item[pos].name=="Krutkie"){
+          if(opcje.item[pos].ind==1){
             O_short_lights=opcje.item[pos].value;
           }
-          if(opcje.item[pos].name=="Halogeny"){
+          if(opcje.item[pos].ind==2){
             O_haloo_lights=opcje.item[pos].value;
           }
-          if(opcje.item[pos].name=="Migacze auto"){
+          if(opcje.item[pos].ind==3){
             O_turn_lights=opcje.item[pos].value;
           }
-          if(opcje.item[pos].name=="Alarm"){
+          if(opcje.item[pos].ind==4){
             O_alarm_lights=opcje.item[pos].value;
           }
-          if(opcje.item[pos].name=="Awaryjne"){
+          if(opcje.item[pos].ind==5){
             O_error_lights=opcje.item[pos].value;
           }
-          if(opcje.item[pos].name=="Auto OFF"){
+          if(opcje.item[pos].ind==6){
             O_autoOff_lights=opcje.item[pos].value;
           }
    
-
+      // DISPLAY CHANGES   "|" character before option
       oled.setCursor(0,15);
       String op = (opcje.item[pos].value ==true)  ? "|" : "";
       oled.print(op); 
-      
       oled.display();
     }else{
     
@@ -290,7 +329,6 @@ oled.setFont(&FreeSans9pt7b);
     //
 
     oled.setCursor(3,5);
-   // oled.print(opcje.item[pos].type); 
 
     oled.setCursor(5,15);
     oled.print(opcje.item[pos].name);  

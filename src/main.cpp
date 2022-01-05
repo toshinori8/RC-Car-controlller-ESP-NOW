@@ -120,7 +120,7 @@ void updateData(int ster, int drive, String dirDrive, String dirSter, int POT)
 // I2C device found at address 0x25  !  PCF8574
 // I2C device found at address 0x3C  !  OLED
 
-Timers<3> timers;
+Timers<4> timers;
 
 
 
@@ -140,7 +140,8 @@ void setup()
   timers.attach(0, 350, handleMenu);
   timers.attach(1, 300, handleButton);
   timers.attach(2, 0, readTurn);
-
+  timers.attach(3, 0, readTurn_encoder);
+  
   initOled();
 
   delay(1000);
@@ -219,7 +220,7 @@ void handleMenu()
 
   if (ButtonVal == 1)
   {
-    
+    timers.updateInterval(3,800);
     timers.updateInterval(2,0);
     
    if(menustate==0){
@@ -233,6 +234,7 @@ void handleMenu()
   {
     menustate=0;
     timers.updateInterval(2,400);
+    timers.updateInterval(3,0);
     //oprint("Application");
 
 
