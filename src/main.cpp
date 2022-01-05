@@ -18,7 +18,9 @@ extern "C" {
 
 uint8_t remoteMac[] = {0xCC, 0x50, 0xE3, 0x56, 0xB7, 0x36};
 #define WIFI_CHANNEL 12
-uint8_t ButtonVal;
+int ButtonVal;
+
+
 int pos = -1;
 bool menustate=0;
 
@@ -134,17 +136,18 @@ void setup()
   pinMode(Pin_A,OUTPUT);
   pinMode(Pin_B,OUTPUT);
 
-  delay(1000);
+  delay(1000); // delay for propper initialisation of expander
   initI2Cbus();
+  delay(50);
 
-  timers.attach(0, 350, handleMenu);
-  timers.attach(1, 300, handleButton);
-  timers.attach(2, 0, readTurn);
-  timers.attach(3, 0, readTurn_encoder);
-  
-  initOled();
 
-  delay(1000);
+  timers.attach(0, 250, handleMenu);       
+  timers.attach(2, 0, readTurn);           // READ/SEND CONTROLLER POTS 
+  timers.attach(3, 0, readTurn_encoder);   // READ MENU BUTTONS 
+
+  initOled();                              // INIT MENU/GRAPHIC FUNCTIONS  
+
+ // delay(1000);
 
       #if (defined(ESPNOW_))
       
@@ -185,15 +188,26 @@ void loop()
 
 
 while(Serial.available()) {
+
+// input from serial console.  
+Serial.println("Serial console input started");
+Serial.println("----------------------------");
+Serial.println("  ");
+Serial.println("  ");
+Serial.println(" [<] [>] SELECT menu option");
+Serial.println("  ");
+Serial.println("   [x]   CHANGE option");
+Serial.println("  ");
+Serial.println("   [e]   EXIT menu");
+
+
+
 String a= Serial.readString();
 if(a==">"){displayMenu(a);}
 if(a=="<"){displayMenu(a);}
-
-
 if (a.substring(0) == "x") 
   {
-    displayMenu(a);
-  //  Serial.println("identified");
+    displayMenu(a); // SEND CONSOLE COMMAND TO MENU IF VISIBLE
   } 
 }
 
@@ -202,10 +216,7 @@ if (a.substring(0) == "x")
 
 }
 
-void handleButton()
-      {
-        
-      }
+
 
 
 
@@ -213,33 +224,22 @@ void handleMenu()
 {
   ButtonVal = pcf8574.digitalRead(0);
 
-// Serial.println(String(menustate)+" - menustate");
-// Serial.println(String(pos)+" - [pos]");
-// Serial.println(String(ButtonVal)+" - Buttonval");
-
-
-  if (ButtonVal == 1)
+  if (ButtonVal == 1) // 0
   {
-    timers.updateInterval(3,800);
-    timers.updateInterval(2,0);
+    timers.updateInterval(3,80); // menu buttons update interval
+    timers.updateInterval(2,0);   // 
     
    if(menustate==0){
         displayMenu("start");
- 
    }  
     
  
   }
-  if (ButtonVal == 0 )
-  {
+  if (ButtonVal == 0)   // 1 
+   {
     menustate=0;
-    timers.updateInterval(2,400);
-    timers.updateInterval(3,0);
-    //oprint("Application");
-
-
-
+    timers.updateInterval(2,50); // READ POTS up
+    timers.updateInterval(3,0); // disable menu buttons
   }
-  delay(50);
 }
 

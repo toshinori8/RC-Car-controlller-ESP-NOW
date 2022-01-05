@@ -133,7 +133,7 @@ void oprint(String var)
 void drawSter(int val1, int val2, String direct, String acc, int brake)
 { 
   
-
+  u8g2.setContrast(0);
 //u8g2.clearDisplay();
 //u8g2.clearBuffer();
   u8g2.setDisplayRotation(U8G2_R2);
@@ -189,7 +189,8 @@ void drawSter(int val1, int val2, String direct, String acc, int brake)
   //  u8g2.setFont(u8g2_font_helvR10_tf);
 
   // Print Forward / Backward
-
+  u8g2.setCursor(0, 20);
+  u8g2.print("      ");
   u8g2.setCursor(0, 20);
   u8g2.print(acc); // left / right ||
   
@@ -240,6 +241,7 @@ void drawSter(int val1, int val2, String direct, String acc, int brake)
 
  void displayMenu(String comm){
 
+  
 // Serial.println(comm);
 // Serial.println(pos);
 
@@ -280,8 +282,12 @@ oled.setFont(&FreeSans9pt7b);
 
       oled.setCursor(5,15);
       oled.print(opcje.item[pos].name);  
+// TRIGGER EXIT ACCTION
+if(comm=="exit"){
 
+  menustate=0;  
 
+}
       // TRIGGER CHANGE BUTTON ACCTION
       if(comm=="x" & opcje.item[pos].type=="bool"){
 

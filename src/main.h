@@ -19,7 +19,6 @@ void digitalReadN();
 bool initOled();
 void handleMenu();
 
-void handleButton();
 // READING POTS / DISPLAY & SEND
 extern void updateData(int ster, int drive, String dirDrive, String dirSter, int POT); // ESP-NOW PREPARE DATA & SEND
 

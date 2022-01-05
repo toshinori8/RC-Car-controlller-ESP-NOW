@@ -96,7 +96,7 @@ void readTurn_encoder()
                 value2 > 570)
             { // 590 => 790
                 
-                displayMenu("x");
+                displayMenu("exit");
             }
             
             mem1 = value1;
