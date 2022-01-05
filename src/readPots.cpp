@@ -5,8 +5,7 @@
 String acc = "forward";
 int brake = 0;
 int pot = 0;
-int Pin_A = 5; // analog INPUT POWER SOURCE #1
-int Pin_B = 4; // analog INPUT POWER SOURCE #2
+
 bool sw = false;
 int turnVal1;
 int turnVal2;
@@ -23,7 +22,7 @@ int value2;
 
 void readTurn()
 {
-      
+    Serial.println("ReadTurn");
     sw = !sw;
     if (sw == true)
     { /// TURN POT reading
@@ -31,6 +30,7 @@ void readTurn()
         digitalWrite(Pin_A, LOW);
         digitalWrite(Pin_B, HIGH);
         turnVal1 = analogRead(pot);
+        Serial.println(turnVal1);
         digitalWrite(Pin_B, LOW);
         value1 = ((turnVal1 * 1000) / 1010);
 

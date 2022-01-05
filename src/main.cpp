@@ -6,11 +6,6 @@
 #include <Adafruit_GFX.h>     // for OLED display
 #include <Adafruit_SSD1306.h> // for OLED display
 #include <Adafruit_I2CDevice.h>
-
-
-
-
-
 byte incomingByte;
 extern "C" {
   #include <espnow.h>
@@ -26,6 +21,21 @@ uint8_t remoteMac[] = {0xCC, 0x50, 0xE3, 0x56, 0xB7, 0x36};
 uint8_t ButtonVal;
 int pos = -1;
 bool menustate=0;
+
+int Pin_A = 5; 
+int Pin_B = 4; 
+
+bool battery_low=false;
+
+// init options
+bool O_short_lights;
+bool O_long_lights;
+bool O_haloo_lights;
+bool O_autoOff_lights;
+bool O_turn_lights;
+bool O_alarm_lights;
+bool O_error_lights;
+
 
 PCF8574 pcf8574(0x25, 14, 12);;
 
@@ -68,28 +78,33 @@ struct __attribute__((packed)) dataStruct
 
   /// CAR OPTIONS
 
-  bool parkingLights;
-  bool turnSignals_auto;
-  bool headlights;
-  bool searchLights;
-  bool autoOffLights;
-  bool rearDoor;
+  bool short_lights;
+  bool long_lights;
+  bool haloo_lights;
+  bool autoOff_lights;
+  bool turn_lights;
+  bool alarm_lights;
+  bool error_lights;
 
 } sensorData;
 
 
 
-void updateOptions(){
-  /// CAR OPTIONS
-  sensorData.parkingLights = OparkingLights;
-  sensorData.turnSignals_auto = OturnSignals_auto;
-  sensorData.headlights = Oheadlights;
-  sensorData.autoOffLights = OautoOffLights;
-  sensorData.rearDoor = OrearDoor;
 
-}
+
 void updateData(int ster, int drive, String dirDrive, String dirSter, int POT)
-{
+{ 
+
+  // OPTIONS
+  sensorData.short_lights = O_short_lights;
+  sensorData.long_lights = O_long_lights;
+  sensorData.haloo_lights = O_haloo_lights;
+  sensorData.autoOff_lights = O_autoOff_lights;
+  sensorData.turn_lights = O_turn_lights;
+  sensorData.alarm_lights = O_alarm_lights;
+  sensorData.error_lights = O_error_lights;
+
+
   // CAR STERING DATA
   sensorData.pot = POT;
   sensorData.ster = ster;
@@ -116,7 +131,8 @@ void setup()
 {
   Serial.begin(115200);
 
-
+  pinMode(Pin_A,OUTPUT);
+  pinMode(Pin_B,OUTPUT);
 
   delay(1000);
   initI2Cbus();
@@ -176,7 +192,7 @@ if(a=="<"){displayMenu(a);}
 if (a.substring(0) == "x") 
   {
     displayMenu(a);
-    Serial.println("identified");
+  //  Serial.println("identified");
   } 
 }
 
@@ -216,7 +232,7 @@ void handleMenu()
   if (ButtonVal == 0 )
   {
     menustate=0;
-    timers.updateInterval(2,100);
+    timers.updateInterval(2,400);
     //oprint("Application");
 
 
