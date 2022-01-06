@@ -1,32 +1,35 @@
-
 #include "readPots.h"
 
+String acc;     // ACCELERATION
+String dir;     // LEFT RIGHT STRING
+int brake = 0;  // BRAKE
 
-String acc;
-int brake = 0;
-int pot = 0;
+// VALUES OF POTS IN %
+int value1;     // acceleration 
+int value2;     // turn
 
-bool sw = false;
-int turnVal1;
+int pot = 0;    // ANALOG INPUT A0
+
+bool sw = false; // VARIABLE OF ACTUAL POT 
+
+int turnVal1;       
 int turnVal2;
 int mem1;
 int mem2;
 int maped1;
-int maped2;
-String dir;
-int value1;
-int value2;
+int maped2;    
 
-// SIMULATE ENCODER FOR MENU INPUT
+
+// SIMULATE ENCODER TO CONTROLL MENU
 void readTurn_encoder()
 {
     sw = !sw;
     if (sw == true)
     { /// LEFT/RIGHT POT reading
 
-        digitalWrite(Pin_A, LOW);   // CHANGE SOURCE OF POWER FOR A0 PIN
+        digitalWrite(Pin_A, LOW); // CHANGE SOURCE OF POWER FOR A0 PIN
         digitalWrite(Pin_B, HIGH);
-        turnVal1 = analogRead(pot);  // READ FIRST ANALOG INPUT ON A0
+        turnVal1 = analogRead(pot); // READ FIRST ANALOG INPUT ON A0
         digitalWrite(Pin_B, LOW);
         value1 = ((turnVal1 * 1000) / 1010);
 
@@ -34,19 +37,19 @@ void readTurn_encoder()
         {
             if (value1 < 550)
             { // 550 -> 425
-                    displayMenu(">");
+                displayMenu(">");
             }
             else if (value1 > 602)
             { // 608 => 755
-                    displayMenu("<");
+                displayMenu("<");
             }
         }
     }
     else
-    { /// acceleration POT reading
-        digitalWrite(Pin_B, LOW);   // CHANGE SOURCE OF POWER FOR A0 PIN
+    {   /// UP/DOWN POT reading
+        digitalWrite(Pin_B, LOW); // CHANGE SOURCE OF POWER FOR A0 PIN
         digitalWrite(Pin_A, HIGH);
-        turnVal2 = analogRead(pot);  // READ SECOND POT ON ANALOG INPUT A0
+        turnVal2 = analogRead(pot); // READ SECOND POT ON ANALOG INPUT A0
         digitalWrite(Pin_A, LOW);
         value2 = ((turnVal2 * 1000) / 1010);
 
@@ -62,23 +65,22 @@ void readTurn_encoder()
             { // 590 => 790
                 displayMenu("exit");
             }
-            
+
             mem1 = value1;
         }
     }
 };
 
-
-// NORMAL READING 
+// NORMAL READING - PROPORTIONAL
 void readTurn()
 {
     sw = !sw;
     if (sw == true)
-    { /// TURN POT reading
+    { /// LEFT/RIGHT POT reading
 
-        digitalWrite(Pin_A, LOW);   // CHANGE SOURCE OF POWER FOR A0 PIN
+        digitalWrite(Pin_A, LOW); // CHANGE SOURCE OF POWER FOR A0 PIN
         digitalWrite(Pin_B, HIGH);
-        turnVal1 = analogRead(pot);  // READ FIRST ANALOG INPUT ON A0
+        turnVal1 = analogRead(pot); // READ FIRST ANALOG INPUT ON A0
         digitalWrite(Pin_B, LOW);
         value1 = ((turnVal1 * 1000) / 1010);
 
@@ -112,17 +114,18 @@ void readTurn()
             drawSter(maped1, maped2, dir, acc, value1);
             updateData(maped1, maped2, acc, dir, turnVal1);
         }
+        // update display and send data
         drawSter(maped1, maped2, dir, acc, value1);
         updateData(maped1, maped2, acc, dir, turnVal1);
 
         // Serial.println(turnVal1);
     }
     else
-    { /// acceleration pot reading
-        digitalWrite(Pin_B, LOW);   // CHANGE SOURCE OF POWER FOR A0 PIN
+    {   /// ACCELERATION POT reading
+        digitalWrite(Pin_B, LOW); // CHANGE SOURCE OF POWER FOR A0 PIN
         digitalWrite(Pin_A, HIGH);
-        turnVal2 = analogRead(pot);  // READ SECOND ANALOG INPUT ON A0
-        digitalWrite(Pin_A, LOW);    
+        turnVal2 = analogRead(pot); // READ SECOND ANALOG INPUT ON A0
+        digitalWrite(Pin_A, LOW);
 
         value2 = ((turnVal2 * 1000) / 1010);
         if (value2)
@@ -142,7 +145,7 @@ void readTurn()
                 maped2 = map(value2, 570, 712, 0, 100);
             }
             else
-            {   
+            {
                 // For stop lights emulation
                 // Serial.println("stop");
                 maped2 = 0;
@@ -150,8 +153,8 @@ void readTurn()
             }
             mem1 = value1;
         }
+        // update display and send data
         drawSter(maped1, maped2, dir, acc, value1);
         updateData(maped1, maped2, acc, dir, turnVal1);
     }
 };
-
