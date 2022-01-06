@@ -7,5 +7,4 @@
 void readTurn();
 void readTurn_encoder();
 
-
-#endif // READPOTS_H
+#endif

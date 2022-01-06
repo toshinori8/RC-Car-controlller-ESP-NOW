@@ -15,7 +15,6 @@ extern "C"
 }
 
 #include "main.h"
-#include "menu.h"
 #include "oled.h"
 #include "readPots.h"
 
