@@ -6,18 +6,23 @@
 #include <Adafruit_GFX.h>     // for OLED display
 #include <Adafruit_SSD1306.h> // for OLED display
 #include <Adafruit_I2CDevice.h>
+
+#include <ESP8266WiFi.h>
+
 byte incomingByte;
 extern "C" {
   #include <espnow.h>
 } 
+
 #include "main.h"
 
 #include "menu.h"
 #include "oled.h"
 #include "readPots.h"
 
+
 uint8_t remoteMac[] = {0xCC, 0x50, 0xE3, 0x56, 0xB7, 0x36};
-#define WIFI_CHANNEL 12
+#define WIFI_CHANNEL 3
 int ButtonVal;
 
 
@@ -70,7 +75,7 @@ bool initI2Cbus()
 
 struct __attribute__((packed)) dataStruct
 {
-  // CAR STERING DATA
+  /// CAR STERING DATA
 
   int pot;
   int drive;
@@ -117,7 +122,11 @@ void updateData(int ster, int drive, String dirDrive, String dirSter, int POT)
   uint8_t bs[sizeof(sensorData)];
   memcpy(bs, &sensorData, sizeof(sensorData));
   esp_now_send(remoteMac, bs, sizeof(sensorData)); // NULL means send to all peer
-}
+  Serial.println("SENDING DATA");
+  Serial.println(String(sensorData.dirDrive));
+
+  
+  }
 
 // I2C device found at address 0x25  !  PCF8574
 // I2C device found at address 0x3C  !  OLED
@@ -132,6 +141,10 @@ Timers<4> timers;
 void setup()
 {
   Serial.begin(115200);
+ 
+  WiFi.mode(WIFI_STA);
+  WiFi.disconnect();
+
 
   pinMode(Pin_A,OUTPUT);
   pinMode(Pin_B,OUTPUT);
@@ -163,16 +176,30 @@ void setup()
 if (esp_now_init() != 0) {
     Serial.println("*** ESP_NOW init failed");
    
+}else{
+
+    Serial.println("*** ESP_NOW OK");
+
 }
 
   esp_now_set_self_role(ESP_NOW_ROLE_CONTROLLER);
   esp_now_add_peer(remoteMac, ESP_NOW_ROLE_SLAVE, WIFI_CHANNEL, NULL, 0);
 
   esp_now_register_send_cb([](uint8_t* mac, uint8_t sendStatus) {
-   // Serial.printf("send_cb, send done, status = %i\n", sendStatus);
+   Serial.printf("send_cb, send done, status = %i\n", sendStatus);
    
   });
 
+    ///  PRINT INFO FOR SERIAL INPUT 
+      Serial.println("Serial console input started");
+      Serial.println("----------------------------");
+      Serial.println("  ");
+      Serial.println("  ");
+      Serial.println(" [<] [>] SELECT menu option");
+      Serial.println("  ");
+      Serial.println("   [x]   CHANGE option");
+      Serial.println("  ");
+      Serial.println("   [e]   EXIT menu");
 
 }
 
@@ -190,15 +217,7 @@ void loop()
 while(Serial.available()) {
 
 // input from serial console.  
-Serial.println("Serial console input started");
-Serial.println("----------------------------");
-Serial.println("  ");
-Serial.println("  ");
-Serial.println(" [<] [>] SELECT menu option");
-Serial.println("  ");
-Serial.println("   [x]   CHANGE option");
-Serial.println("  ");
-Serial.println("   [e]   EXIT menu");
+
 
 
 

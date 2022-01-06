@@ -5,7 +5,7 @@
 #include <U8g2lib.h>
 //#include "FreeSansBold12pt7b.h"
 #include <Fonts/FreeSans9pt7b.h>
-
+#include <Fonts/Lato_Medium_9.h>
 
 
 Adafruit_SSD1306 oled(OLED_WIDTH, OLED_HEIGHT, &Wire, OLED_RESET);
@@ -78,7 +78,7 @@ bool initOled()
 opcje.item[0].ind = 0;
 opcje.item[0].type = "bool";
 opcje.item[0].name = "Sw. drogowe";
-opcje.item[0].desc = "Długie";
+opcje.item[0].desc = "Dlugie";
 opcje.item[0].value = false;
 
 opcje.item[1].ind = 1;
@@ -96,13 +96,13 @@ opcje.item[2].value = false;
 opcje.item[3].ind = 3;  
 opcje.item[3].type = "bool";
 opcje.item[3].name = "Migacze auto";
-opcje.item[3].desc = "Kierunkowskazy przy skręcaniu";
+opcje.item[3].desc = "Autom. przy skrecaniu";
 opcje.item[3].value = true;
 
 opcje.item[4].ind = 4;
 opcje.item[4].type = "bool";
 opcje.item[4].name = "Alarm";
-opcje.item[4].desc = "Włącz alarm";
+opcje.item[4].desc = "Wzbudz alarm";
 opcje.item[4].value = false;
 
 opcje.item[5].ind = 5;
@@ -282,6 +282,10 @@ oled.setFont(&FreeSans9pt7b);
 
       oled.setCursor(5,15);
       oled.print(opcje.item[pos].name);  
+
+      
+
+
 // TRIGGER EXIT ACCTION
 if(comm=="exit"){
 
@@ -320,6 +324,11 @@ if(comm=="exit"){
       // DISPLAY CHANGES   "|" character before option
       oled.setCursor(0,15);
       String op = (opcje.item[pos].value ==true)  ? "|" : "";
+
+   
+    
+    //  u8g2.sendBuffer();      
+
       oled.print(op); 
       oled.display();
     }else{
@@ -329,15 +338,22 @@ if(comm=="exit"){
 
     oled.setCursor(0,15);
     
-    // oled bool checker
+    // PRINT ACTUAL MENU ITEM VALUE  
       String opt = (opcje.item[pos].value ==true)  ? "|" : "";
       oled.print(opt);
     //
 
-    oled.setCursor(3,5);
-
+    //oled.setCursor(3,5);
+    /// PRINT MENU ITEM NAME  
     oled.setCursor(5,15);
     oled.print(opcje.item[pos].name);  
+
+      /// PRINT DESCRIPTION 
+      oled.setFont(&Lato_Medium_9);
+      oled.setCursor(5,26);
+      oled.print(opcje.item[pos].desc);
+
+
     oled.display();
     }
     

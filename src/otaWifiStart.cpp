@@ -1,8 +1,8 @@
 #include <Arduino.h>
 //#include <main.h>
-
-#if (defined(WIFI_) || defined(ESPNOW_))
 #include <ESP8266WiFi.h>
+#if (defined(WIFI_) || defined(ESPNOW_))
+
 #endif
 
 #if (defined(WIFI_))
