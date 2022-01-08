@@ -1,13 +1,13 @@
 
 // cc:50:e3:56:b7:36  MAC ADRESS OF this device
 #include <ESP8266WiFi.h>
-//#include <WiFiClient.h>
-//#include <ESPAsyncWebServer.h>
-//#include <ESP8266mDNS.h>
-//#include <ESPAsyncTCP.h>
+#include <WiFiClient.h>
+#include <ESPAsyncWebServer.h>
+#include <ESP8266mDNS.h>
+#include <ESPAsyncTCP.h>
 
-//#include <WiFiUdp.h>
-//#include <ArduinoOTA.h>
+#include <WiFiUdp.h>
+#include <ArduinoOTA.h>
 #include <espnow.h>
 
 /////// OLED DISPLAY
@@ -31,8 +31,8 @@
 Servo myservo;
 
 // These are the pins used to control the motor shield
-#define DRIVE_MOTOR_POWER 3 //  D2 nodeMCU D2 
-#define DRIVE_MOTOR_DIRECTION 4     // D4 nodeMCU
+#define DRIVE_MOTOR_POWER D1 //  D2 nodeMCU D2 4
+#define DRIVE_MOTOR_DIRECTION D3     // D4 nodeMCU 2
 //#define STEER_MOTOR_POWER D1 // Motor A   gpio 5 
 //#define STEER_MOTOR_DIRECTION D3 // gpio0
 
@@ -88,22 +88,35 @@ int curL;
 //  Serial.print("Drive: ");
  // Serial.println(dataBeam.dirDrive);
 
+  if(dataBeam.dirDrive=="="){
+    analogWrite(DRIVE_MOTOR_POWER, 0);
+    }else{
+      int mapped= map(dataBeam.drive,0,100,170,255);
+//        Serial.println("mapped");
+//        Serial.println(mapped);
+  analogWrite(DRIVE_MOTOR_POWER, mapped);
+  }
+
 
 if(dataBeam.dirDrive=="^"){
   digitalWrite(DRIVE_MOTOR_DIRECTION, LOW);
+
   }
+
+ 
 if(dataBeam.dirDrive=="V"){
-  digitalWrite(DRIVE_MOTOR_DIRECTION, HIGH);
+   digitalWrite(DRIVE_MOTOR_DIRECTION, HIGH);
   }
-   analogWrite(DRIVE_MOTOR_POWER, dataBeam.drive*6);
- //int servos = map(dataBeam.pot, 754,427, 75, 106 );
-int servos = map(dataBeam.pot, 754,427, 0, 180 );
+ 
 
-//servos=servos*180.0/1023;
+ 
 
-  Serial.println(servos);
 
-myservo.write(servos);
+int servos = map(dataBeam.pot,768, 423, 1200, 2000 );
+
+Serial.println(dataBeam.pot);
+myservo.writeMicroseconds(servos);
+
 }
 
 
@@ -111,7 +124,24 @@ myservo.write(servos);
 
 ///// .  ESP NOW
 
+void initESP_NOW(){
+  
+if (esp_now_init() != 0) {
+    Serial.println("Error initializing ESP-NOW");
+    return;
+  }else{
+        Serial.println("ESP-NOW OK");
 
+    }
+  
+  
+  // Once ESPNow is successfully Init, we will register for recv CB to
+  // get recv packer info
+  esp_now_set_self_role(ESP_NOW_ROLE_SLAVE);
+  esp_now_register_recv_cb(OnDataRecv);  
+  
+  
+  }
 
 
  
@@ -120,7 +150,7 @@ myservo.write(servos);
 String wifiMacString;
 
 
-//void otaStart();
+void otaStart();
 
 
 
@@ -143,23 +173,23 @@ const char* PARAM_INPUT_1 = "ajaxDrive";
 const char* PARAM_INPUT_2 = "ajaxSter";
 String inputMessage1;
 String inputMessage2;
-//#include "motorPage.h"
-//String processor(const String& var)
-//{
-//  if(var == "MAC_ADDR")
-//    return wifiMacString();
-//}
+#include "motorPage.h"
+String processor(const String& var)
+{
+  if(var == "MAC_ADDR")
+    return wifiMacString;
+}
 
 
 
 
 
-//
-//
+
+
 //void notFound(AsyncWebServerRequest *request) {
 //  request->send(404, "text/plain", "Not found");
 //}
-//
+
 
 
 
@@ -209,19 +239,19 @@ void setup(void){
 
     myservo.attach(2); // digital PIN D1 on nodeMCU / 
 
-      delay(200);
-    myservo.write(90);
+//      delay(200);
+//    myservo.write(200);
 
  
-      delay(200);
-          myservo.write(0);
+//      delay(200);
+//          myservo.write(-200);
 
-      delay(200);
+//      delay(200);
       
-    digitalWrite(LED_BUILTIN,HIGH ); 
+//    digitalWrite(LED_BUILTIN,HIGH ); 
       
       
-      myservo.write(180);
+//      myservo.write(0);
 
   //Wire.begin(D5, D6);
 
@@ -258,16 +288,16 @@ void setup(void){
   delay(1000);
   
  
-//  WiFi.begin(ssid, password);
+  WiFi.begin(ssid, password);
 
 
   initESP_NOW();
 
   // Wait for connection
-//  while (WiFi.status() != WL_CONNECTED) {
-//    delay(200);
-//    Serial.print(".");
-//  }
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(200);
+    Serial.print(".");
+  }
   Serial.println("");
   Serial.print("Connected to ");
   Serial.println(ssid);
@@ -275,17 +305,17 @@ void setup(void){
   Serial.println(WiFi.localIP());
   wifiMacString = WiFi.macAddress();
   Serial.println(wifiMacString);
-//  if (MDNS.begin("Rancho")) {
-//    
-//    Serial.println("MDNS Responder Started");
-//      //server.begin();
-//      //u8g2.begin();
-//  }
-  //otaStart();
+  if (MDNS.begin("Rancho")) {
+    
+    Serial.println("MDNS Responder Started");
+     // server.begin();
+      //u8g2.begin();
+  }
+ otaStart();
   
 
   
-  //server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
+//  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
  // request->send_P(200, "text/html", webpage, processor);
 //});
 
@@ -293,61 +323,64 @@ void setup(void){
         
         
         
-      //  if (request->hasParam(PARAM_INPUT_2)) {
-       //     inputMessage2 = request->getParam(PARAM_INPUT_2)->value();
-
-      //  }
-    //Serial.println(PARAM_INPUT_2);
-   // Serial.println(inputMessage2);
-
-   // displayData();
-   // request->send_P(200, "text/html", "ajaxSterOK");
-    
-   
- // });
-
-      
- // server.on("/ajaxDrive", [](AsyncWebServerRequest *request){
-
-    
-    
-    // GET input1 value on <ESP_IP>/get?input1=<inputMessage>
-    //if (request->hasParam(PARAM_INPUT_1)) {
-     // inputMessage1 = request->getParam(PARAM_INPUT_1)->value();
-     
-
+//        if (request->hasParam(PARAM_INPUT_2)) {
+//            inputMessage2 = request->getParam(PARAM_INPUT_2)->value();
+//
+//        }
+//    Serial.println(PARAM_INPUT_2);
+//    Serial.println(inputMessage2);
+//
+////    displayData();
+//    request->send_P(200, "text/html", "ajaxSterOK");
+//    
+//   
+//  });
+//
+//      
+//  server.on("/ajaxDrive", [](AsyncWebServerRequest *request){
+//
+//    
+//    
+//     //GET input1 value on <ESP_IP>/get?input1=<inputMessage>
+//    if (request->hasParam(PARAM_INPUT_1)) {
+//      inputMessage1 = request->getParam(PARAM_INPUT_1)->value();
+//     
+//
 //Serial.println(PARAM_INPUT_1);
 //Serial.println(inputMessage1);
-
-
- // displayData();
-      
-   // }
-
-  //  request->send_P(200, "text/html", "ajaxOK");
-    
-   
- // });
-  
-  
+//
+//
+// // displayData();
+//      
+//    }
+//
+//    request->send_P(200, "text/html", "ajaxOK");
+//    
+//   
+//  });
+//  
+//  
 //  server.on("/right", [](AsyncWebServerRequest *request){
 //    Serial.println("right");
-//    analogWrite(STEER_MOTOR_POWER, steeringPower);
-//    digitalWrite(STEER_MOTOR_DIRECTION, steerDirection);
+//    //analogWrite(STEER_MOTOR_POWER, steeringPower);
+//    //digitalWrite(STEER_MOTOR_DIRECTION, steerDirection);
 //    request->send_P(200, "text/html", "right");
 //  });
- 
-
+// 
+//
 //   server.onNotFound(notFound);
-
- 
+//
+// 
 //  Serial.println("HTTP Server Started");
+
+
+
 }
 
 
 
 void loop(void){
-  //ArduinoOTA.handle();
+  ArduinoOTA.handle();
  
 
 
