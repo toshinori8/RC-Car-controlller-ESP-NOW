@@ -91,7 +91,7 @@ void OnDataRecv(uint8_t * mac, uint8_t *incomingData, uint8_t len) {
   if (dataBeam.dirDrive == "=") {
     analogWrite(DRIVE_MOTOR_POWER, 0);
   } else {
-    int mapped = map(dataBeam.drive, 0, 100, 170, 255);
+    int mapped = map(dataBeam.drive, 0, 100, 100, 255);
     //        Serial.println("mapped");
     //        Serial.println(mapped);
     analogWrite(DRIVE_MOTOR_POWER, mapped);
