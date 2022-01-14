@@ -61,3 +61,4 @@ lib/.DS_Store
 .vscode/c_cpp_properties.json
 .pio/build/project.checksum
 .pio/build/project.checksum
+.DS_Store
