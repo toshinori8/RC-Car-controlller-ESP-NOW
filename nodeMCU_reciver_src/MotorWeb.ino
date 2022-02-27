@@ -70,7 +70,7 @@ typedef struct dataStruct {
   
 } dataStruct;
 dataStruct dataBeam;
-
+  
 void OnDataRecv(uint8_t * mac, uint8_t *incomingData, uint8_t len) {
 int curR;
 int curL; 
