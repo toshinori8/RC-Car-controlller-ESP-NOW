@@ -1,5 +1,5 @@
 
-// cc:50:e3:56:b7:36  MAC ADRESS OF this device
+// 9C:1F:46:63:3B  MAC ADRESS OF this device
 #include <ESP8266WiFi.h>
 //#include <WiFiClient.h>
 //#include <ESPAsyncWebServer.h>
@@ -194,11 +194,7 @@ String inputMessage2;
 //}
 
 
-
 void initESP_NOW();
-
-
-
 
 
 
@@ -274,6 +270,7 @@ void setup(void){
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
   wifiMacString = WiFi.macAddress();
+  Serial.print('MAC ADDRES :: ');
   Serial.println(wifiMacString);
 //  if (MDNS.begin("Rancho")) {
 //    
