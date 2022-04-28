@@ -25,8 +25,8 @@ int ButtonVal;
 int pos = -1;   // initial position of menu
 bool menustate = 0;  
 
-int Pin_A = 4;  // POWER SOURCE OF POTS
-int Pin_B = 5;
+int Pin_A = 5;  // POWER SOURCE OF POTS
+int Pin_B = 4;
 
 bool battery_low = false;
 
@@ -168,7 +168,7 @@ void setup()
 
   esp_now_register_send_cb([](uint8_t *mac, uint8_t sendStatus)
                            {
-                            // Serial.printf("send_cb, send done, status = %i\n", sendStatus);
+                             Serial.printf("send_cb, send done, status = %i\n", sendStatus);
                            });
 
   ///  PRINT INFO FOR SERIAL INPUT

@@ -29,7 +29,7 @@ bool initOled()
     u8g2.begin();
     u8g2.enableUTF8Print();
 
-    oled.setRotation(0);
+    oled.setRotation(2);
     oled.clearDisplay();
     oled.setTextSize(0);
     oled.setTextColor(SSD1306_WHITE);
@@ -97,7 +97,7 @@ void oprint(String var)
 void drawSter(int val1, int val2, String direct, String acc, int brake)
 {
   u8g2.setContrast(0); // optional brightnes low
-  u8g2.setDisplayRotation(U8G2_R0);
+  u8g2.setDisplayRotation(U8G2_R2);
 
   // PRINT KNOBS ON OLED
   u8g2.setFont(u8g2_font_amstrad_cpc_extended_8f);
