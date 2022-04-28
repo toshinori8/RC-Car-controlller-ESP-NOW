@@ -19,6 +19,7 @@ int mem2;
 int maped1;
 int maped2;    
 
+int brake_indicator;
 
 // SIMULATE ENCODER TO CONTROLL MENU
 void readTurn_encoder()
@@ -136,6 +137,9 @@ void readTurn()
                 // Serial.println("backward");
                 acc = "V";
                 maped2 = map(value2, 526, 385, 0, 100);
+
+                // to do // brake light indicator on reciver side
+            
             }
             else if (
                 value2 > 570)
