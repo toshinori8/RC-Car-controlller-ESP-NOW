@@ -124,6 +124,8 @@ void setup()
   Serial.begin(115200);
 
   WiFi.mode(WIFI_STA);
+    wifi_set_macaddr(STATION_IF, &remoteMac[0]);
+
   WiFi.disconnect();
 
   pinMode(Pin_A, OUTPUT); 
