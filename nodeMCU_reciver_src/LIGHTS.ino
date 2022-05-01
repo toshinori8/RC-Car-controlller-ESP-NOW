@@ -1,27 +1,41 @@
 
-int counter_brake =100; // delay for stop led. 
+int counter_brake =6; // delay for stop led. 
 
-void  turnLightFW(String direction){
-Serial.print(direction);
-    if(direction=="forw"){
+void  turnLightFW(int direction){
+Serial.println(direction);
+Serial.println(counter_brake);
+    if(direction==1){
         // stop light       OFF
         // reverse light    OFF 
 
     }
-     if(direction=="back"){
+     if(direction==2){
         // stop light       ON
-        Serial.println('stop    ON');
-        counter_brake--;
-
+        // Serial.println('stop    ON');
+        
         if(counter_brake==0){
-                Serial.println('reverse ON');
-                Serial.println('stop    OFF');
+                Serial.println("reverse ON");
+                Serial.println("stop    OFF");
                 // reverse light    ON 
                 // stop light       OFF
+        }else{
+          counter_brake--;
+
         }
-    }else(counter_brake = 100);
+
+
+        
+        
+    }else(counter_brake = 6);
 
 }
 
-void turnLightLeft(){};
-void turnLightRight(){};
+void turnLightLeft(){
+// Serial.println('turn  LEFT');
+
+};
+void turnLightRight(){
+
+// Serial.println('turn  RIGHT');
+
+};

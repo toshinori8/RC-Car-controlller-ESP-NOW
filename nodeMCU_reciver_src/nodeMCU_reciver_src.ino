@@ -94,11 +94,11 @@ int curL;
 
 if(dataBeam.dirDrive=="^"){
   digitalWrite(DRIVE_MOTOR_DIRECTION, LOW);
-  turnLightFW("forw");
+  turnLightFW(1);
   }
 if(dataBeam.dirDrive=="V"){
   digitalWrite(DRIVE_MOTOR_DIRECTION, HIGH);
- turnLightFW("back");
+ turnLightFW(2);
   }
    analogWrite(DRIVE_MOTOR_POWER, dataBeam.drive*6);
  //int servos = map(dataBeam.pot, 754,427, 75, 106 );
@@ -107,6 +107,8 @@ int servos = map(dataBeam.pot, 754,427, 0, 180 );
 //servos=servos*180.0/1023;
 
  // Serial.println(servos);
+
+
 
 if(servos>70){
 turnLightLeft();
@@ -217,7 +219,6 @@ void setup(void){
   Serial.begin(115200);
   delay(1000);
 //analogWrite(15, 1023);
-
     myservo.attach(2); // digital PIN D1 on nodeMCU / 
 
       delay(200);

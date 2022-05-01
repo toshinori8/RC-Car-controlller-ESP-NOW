@@ -18,15 +18,15 @@ extern "C"
 #include "oled.h"
 #include "readPots.h"
 
-uint8_t remoteMac[] = {0xCC, 0x50, 0xE3, 0x56, 0xB7, 0x36};
+uint8_t remoteMac[] = {0x9C, 0x9c, 0x1F, 0x46, 0x63, 0x3B};
 #define WIFI_CHANNEL 3
 int ButtonVal;  
 
 int pos = -1;   // initial position of menu
 bool menustate = 0;  
 
-int Pin_A = 5;  // POWER SOURCE OF POTS
-int Pin_B = 4;
+int Pin_A = 4;  // POWER SOURCE OF POTS
+int Pin_B = 5;
 
 bool battery_low = false;
 

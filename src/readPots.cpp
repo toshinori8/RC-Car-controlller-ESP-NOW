@@ -19,7 +19,6 @@ int mem2;
 int maped1;
 int maped2;    
 
-int brake_indicator;
 
 // SIMULATE ENCODER TO CONTROLL MENU
 void readTurn_encoder()
