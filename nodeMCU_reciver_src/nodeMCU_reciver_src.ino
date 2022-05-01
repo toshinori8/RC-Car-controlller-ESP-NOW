@@ -3,13 +3,15 @@
 #include <ESP8266WiFi.h>
 #include <AnalogSmooth.h>
 
+
 //#include <WiFiClient.h>
 //#include <ESPAsyncWebServer.h>
 //#include <ESP8266mDNS.h>
 //#include <ESPAsyncTCP.h>
 uint8_t reciverMac[] = { 0xCC, 0x50, 0xE3, 0x56, 0xB7, 0x36 };
 
-AnalogSmooth as = AnalogSmooth(6);
+AnalogSmooth smoothTurn = AnalogSmooth(6);
+AnalogSmooth smoothDrive = AnalogSmooth(10);
 
 
 //#include <WiFiUdp.h>
@@ -37,8 +39,8 @@ AnalogSmooth as = AnalogSmooth(6);
 Servo myservo;
 
 // These are the pins used to control the motor shield
-#define DRIVE_MOTOR_POWER 3      //  D2 nodeMCU D2
-#define DRIVE_MOTOR_DIRECTION 4  // D4 nodeMCU
+#define DRIVE_MOTOR_POWER D2      //  D2 nodeMCU D2
+#define DRIVE_MOTOR_DIRECTION D4  // D4 nodeMCU
 //#define STEER_MOTOR_POWER D1 // Motor A   gpio 5
 //#define STEER_MOTOR_DIRECTION D3 // gpio0
 
@@ -103,16 +105,17 @@ void OnDataRecv(uint8_t* mac, uint8_t* incomingData, uint8_t len) {
     digitalWrite(DRIVE_MOTOR_DIRECTION, HIGH);
     turnLightFW(2);
   }
-  analogWrite(DRIVE_MOTOR_POWER, dataBeam.drive * 10);
+  analogWrite(DRIVE_MOTOR_POWER, smoothDrive.smooth(dataBeam.drive) * 10);
   //int servos = map(dataBeam.pot, 754,427, 75, 106 );
-  int servos = map(dataBeam.pot, 754, 427, 0, 180);
+
+
+
+
+  int servos = map(smoothTurn.smooth(dataBeam.pot), 754, 427, 0, 180);
 
   //servos=servos*180.0/1023;
 
-   Serial.println(dataBeam.drive);
-
-  float analogSmooth = as.smooth(servos);
-
+   Serial.println(dataBeam.dirDrive);
 
   if (servos > 70) {
     turnLightLeft();
@@ -120,13 +123,10 @@ void OnDataRecv(uint8_t* mac, uint8_t* incomingData, uint8_t len) {
     turnLightRight();
   }
 
-  myservo.write(analogSmooth);
+  myservo.write(servos);
 }
 
 
-
-
-///// .  ESP NOW
 
 
 
@@ -145,13 +145,13 @@ String wifiMacString;
 
 // drivePower sets how fast the car goes
 // Can be set between 0 and 1023 (although car problaly wont move if values are too low)
-int drivePower = 1023;
+// int drivePower = 1023;
 
-uint8_t driveDirection = HIGH;
+// uint8_t driveDirection = HIGH;
 
-int steeringPower = 1023;
+// int steeringPower = 1023;
 
-uint8_t steerDirection = HIGH;
+// uint8_t steerDirection = HIGH;
 
 const char* ssid = "oooooio";
 const char* password = "pmgana921";
@@ -219,7 +219,7 @@ void setup(void) {
   Serial.begin(115200);
   delay(1000);
   //analogWrite(15, 1023);
-  myservo.attach(2);  // digital PIN D1 on nodeMCU /
+  myservo.attach(5);  // digital PIN D1 on nodeMCU /
 
   delay(200);
   //myservo.write(90);
@@ -262,7 +262,7 @@ void setup(void) {
   /////////////////////////////////////     OLED DISOPLAY
 
 
-
+ initI2Cbus(); 
 
 
   WiFi.mode(WIFI_STA);
