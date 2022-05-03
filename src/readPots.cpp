@@ -134,7 +134,7 @@ void readTurn()
                 value2 < 526)
             { // 755 -> 608
                 // Serial.println("backward");
-                acc = "V";
+                acc = "^";
                 maped2 = map(value2, 526, 385, 0, 100);
 
                 // to do // brake light indicator on reciver side
@@ -144,7 +144,7 @@ void readTurn()
                 value2 > 570)
             { // 590 => 790
                 // Serial.println("forward");
-                acc = "^";
+                acc = "V";
                 maped2 = map(value2, 570, 712, 0, 100);
             }
             else

@@ -1,9 +1,8 @@
 
 
-void readAnalog(){
-  
-   
-      
-//  1024 - 585 
-  
-  }
+void readAnalog() {
+
+
+
+  //  1024 - 585
+}

@@ -1,4 +1,6 @@
 
+
+
 // 9C:1F:46:63:3B  MAC ADRESS OF this device
 #include <ESP8266WiFi.h>
 #include <AnalogSmooth.h>
