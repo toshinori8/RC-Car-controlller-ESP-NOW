@@ -117,7 +117,7 @@ void OnDataRecv(uint8_t* mac, uint8_t* incomingData, uint8_t len) {
 
   //servos=servos*180.0/1023;
 
-   Serial.println(dataBeam.dirDrive);
+   Serial.println(servos);
 
   if (servos > 70) {
     turnLightLeft();

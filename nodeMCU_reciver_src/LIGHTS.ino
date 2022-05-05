@@ -37,11 +37,11 @@ void turnLightFW(int direction) {
 }
 
 void turnLightLeft(){
-  //  Serial.println('turn  LEFT');
+   Serial.println('turn  LEFT');
 
 };
 void turnLightRight(){
-  // Serial.println('turn  RIGHT');
+  Serial.println('turn  RIGHT');
 };
 
 bool initI2Cbus() {
