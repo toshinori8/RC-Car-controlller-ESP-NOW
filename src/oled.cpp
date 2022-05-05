@@ -225,6 +225,9 @@ void displayMenu(String comm)
     if (opcje.item[pos].ind == 3)
     {
       O_turn_lights = opcje.item[pos].value;
+  //  Serial.println("opcje.item[pos].value");
+  //     Serial.println(opcje.item[pos].value);
+
     }
     if (opcje.item[pos].ind == 4)
     {

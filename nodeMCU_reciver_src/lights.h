@@ -1,0 +1,2 @@
+void leftLED();
+void rightLED();

@@ -100,6 +100,9 @@ void updateData(int ster, int drive, String dirDrive, String dirSter, int POT)
   sensorData.turn_lights = O_turn_lights;
   sensorData.alarm_lights = O_alarm_lights;
   sensorData.error_lights = O_error_lights;
+Serial.println("sensorData.turn_lights");
+
+Serial.print(sensorData.turn_lights);
 
   // CAR STERING DATA
   sensorData.pot = POT;

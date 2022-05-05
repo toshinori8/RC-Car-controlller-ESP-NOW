@@ -1,5 +1,4 @@
-
-
+#include <Timers.h>
 
 // 9C:1F:46:63:3B  MAC ADRESS OF this device
 #include <ESP8266WiFi.h>
@@ -34,7 +33,7 @@ AnalogSmooth smoothDrive = AnalogSmooth(10);
 
 
 
-#include <Timers.h>
+
 
 #include <Servo.h>
 
@@ -51,6 +50,9 @@ const int pot = 0;
 
 const char minAngle = 0;
 const char maxAngle = 100;
+
+
+Timers<4> timers; // DEFINE # OF TIMERS
 
 
 
@@ -82,21 +84,16 @@ typedef struct dataStruct {
 dataStruct dataBeam;
 
 void OnDataRecv(uint8_t* mac, uint8_t* incomingData, uint8_t len) {
-  int curR;
-  int curL;
+  // int curR;
+  // int curL;
 
   memcpy(&dataBeam, incomingData, sizeof(dataBeam));
 
   //Serial.println("RECIVIG DATA ON ESP_NOW");
 
-  //  Serial.print("Ster: ");
-  // Serial.println(dataBeam.pot);
-  //  Serial.print("Drive: ");
-  //  Serial.println(dataBeam.drive);
-  // Serial.print("Ster: ");
-  //  Serial.println(dataBeam.dirSter);
-  //  Serial.print("Drive: ");
-  // Serial.println(dataBeam.dirDrive);
+  //  Serial.print("turn_lights: ");
+  // Serial.println(dataBeam.turn_lights);
+
 
 
   if (dataBeam.dirDrive == "^") {
@@ -118,12 +115,29 @@ void OnDataRecv(uint8_t* mac, uint8_t* incomingData, uint8_t len) {
   //servos=servos*180.0/1023;
 
    Serial.println(servos);
+      Serial.print("turn_lights: ");
 
-  if (servos > 70) {
+Serial.println(dataBeam.turn_lights);
+
+  if(dataBeam.turn_lights==1){ // check esp-now signal of autoturn Led 
+
+
+
+  if (servos <= 70) {
+ 
     turnLightLeft();
-  } else if (servos < 110) {
+  } else if (servos >= 110) {
     turnLightRight();
+  
+  }else{
+
+timers.updateInterval(1,0);
+timers.updateInterval(0,0);
   }
+
+
+  };
+
 
   myservo.write(servos);
 }
@@ -213,11 +227,21 @@ String inputMessage2;
 //}
 
 
+
+
+
 void initESP_NOW();
 
 
 
+
 void setup(void) {
+
+
+
+  timers.attach(0, 0, leftLED); 
+  timers.attach(1, 0, rightLED); 
+
   Serial.begin(115200);
   delay(1000);
   //analogWrite(15, 1023);
@@ -363,4 +387,5 @@ void setup(void) {
 
 void loop(void) {
   //ArduinoOTA.handle();
+  timers.process();
 }

@@ -1,14 +1,45 @@
 
 int counter_brake = 6;  // delay for stop led.
+int counter_turn_1 = 8;  // 
+int counter_turn_2 = 120;  // delay 
+
+
 #include "PCF8574.h"
 
-PCF8574 pcf8574(0x25, 10, D3);
+#include <Timers.h>
+
+
+
+
+PCF8574 pcf8574(0x25, 10, D3); // init PCF8574 board
+
+  void leftLED(){
+        counter_turn_1--;
+        if(counter_turn_1==0){
+          pcf8574.digitalWrite(P7, LOW);
+          counter_turn_1=6;
+        }else{
+          pcf8574.digitalWrite(P7, HIGH); 
+        }
+        pcf8574.digitalWrite(P6, HIGH);
+  }
+  void rightLED(){
+          counter_turn_1--;
+        if(counter_turn_1==0){
+          pcf8574.digitalWrite(P6, LOW);
+          counter_turn_1=6;
+        }else{
+          pcf8574.digitalWrite(P6, HIGH); 
+        }
+        pcf8574.digitalWrite(P7, HIGH);
+  }
+
 
 
 void turnLightFW(int direction) {
-  // Serial.println(direction);
-  // Serial.println(counter_brake);
-  if (direction == 1) {
+
+
+ if (direction == 1) {
     // stop light       OFF
     // reverse light    OFF
     pcf8574.digitalWrite(P0, HIGH);
@@ -34,17 +65,27 @@ void turnLightFW(int direction) {
 
   } else
     (counter_brake = 6);
+  
+ 
 }
 
 void turnLightLeft(){
-   Serial.println('turn  LEFT');
 
+
+   
+    timers.updateInterval(0,counter_turn_2);
+    timers.updateInterval(1,0);
 };
 void turnLightRight(){
-  Serial.println('turn  RIGHT');
+   
+  
+    timers.updateInterval(1, counter_turn_2); 
+    timers.updateInterval(0, 0);
 };
 
 bool initI2Cbus() {
+  Timers<4> timers; // DEFINE # OF TIMERS
+
 
   Wire.beginTransmission(0x25);  // device 1
 
@@ -54,6 +95,11 @@ bool initI2Cbus() {
 
   pcf8574.pinMode(0, OUTPUT, HIGH);
   pcf8574.pinMode(1, OUTPUT, HIGH);
+     
+      // TURN LIGHTS 
+      pcf8574.pinMode(6, OUTPUT, HIGH); // TURN RIGHT
+      pcf8574.pinMode(7, OUTPUT, HIGH); // TURN LEFT 
+
   pcf8574.digitalWrite(0, LOW);
   pcf8574.digitalWrite(1, HIGH);
   pcf8574.digitalWrite(P2, HIGH);
