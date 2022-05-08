@@ -34,6 +34,20 @@ PCF8574 pcf8574(0x25, 10, D3); // init PCF8574 board
         pcf8574.digitalWrite(P7, HIGH);
   }
 
+// short_lights
+void short_lights_ON(){ pcf8574.digitalWrite(P5, LOW);};
+void short_lights_OFF(){ pcf8574.digitalWrite(P5, HIGH);};
+
+
+// long_lights
+void long_lights_ON(){ pcf8574.digitalWrite(P4, LOW);};
+void long_lights_OFF(){ pcf8574.digitalWrite(P4, HIGH);};
+
+
+// haloo_lights
+void haloo_lights_ON(){ pcf8574.digitalWrite(P3, LOW);};
+void haloo_lights_OFF(){ pcf8574.digitalWrite(P3, HIGH);};
+
 
 
 void turnLightFW(int direction) {

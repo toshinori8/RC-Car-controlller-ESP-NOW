@@ -114,29 +114,48 @@ void OnDataRecv(uint8_t* mac, uint8_t* incomingData, uint8_t len) {
 
   //servos=servos*180.0/1023;
 
-   Serial.println(servos);
-      Serial.print("turn_lights: ");
+  Serial.println(servos);
+  Serial.print("turn_lights: ");
 
-Serial.println(dataBeam.turn_lights);
+  Serial.println(dataBeam.turn_lights);
 
+
+  // turn_lights
   if(dataBeam.turn_lights==1){ // check esp-now signal of autoturn Led 
-
-
-
   if (servos <= 70) {
- 
     turnLightLeft();
   } else if (servos >= 110) {
     turnLightRight();
-  
   }else{
+    timers.updateInterval(1,0);
+    timers.updateInterval(0,0);
+  }
+  };
 
-timers.updateInterval(1,0);
-timers.updateInterval(0,0);
+
+  //short_lights
+  if(dataBeam.short_lights==1){ 
+    short_lights_ON();
+  }else{
+    short_lights_OFF();
   }
 
 
-  };
+  //long_lights
+  if(dataBeam.long_lights==1){ 
+    long_lights_ON();
+  }else{
+    long_lights_OFF();
+  }
+
+
+  //haloo_lights
+  if(dataBeam.haloo_lights==1){ 
+    haloo_lights_ON();
+  }else{
+    haloo_lights_OFF();
+  }
+
 
 
   myservo.write(servos);
